@@ -12,15 +12,16 @@ class Play extends Phaser.Scene {
                 suffix: '.png',
                 end: 3, 
             }), repeat: -1 });
-        /*
+        
         this.anims.create({
-             key: 'ninja_jump',
-             frames: this.anims.generateFrameNames('ninja', { 
-                prefix: 'run_',
+             key: 'avatar_jump',
+             frames: this.anims.generateFrameNames('avatar', { 
+                prefix: 'avatar_run',
                 suffix: '.png',
+                start: 3,
                 end: 3,
             }), repeat: -1 });
-        */
+        
 
         this.background= this.add.tileSprite(w- 200, h, w*5, h*5, 'background').setOrigin(0.5);
         //this.background.scale= .5;
@@ -29,7 +30,8 @@ class Play extends Phaser.Scene {
         this.avatar.displayHeight= 100;
         this.avatar.displayWidth= 50;
         this.avatar.setGravity(0, 4000);
-        this.canJump= true;
+        this.onGround= false;
+
 
         this.ground= this.physics.add.sprite(w*.15, h*.99, "platform", );
         this.ground.displayWidth= w * 1.75;
@@ -47,7 +49,27 @@ class Play extends Phaser.Scene {
     }
 
     update(time, delta){
-        this.background.tilePositionX+=speed/25;
+        this.background.tilePositionX+=speed/30;
+
+        //store boolean if player is on ground or jumping
+        if (this.avatar.y < 500){
+            this.onGround= false;
+            //console.log('jumping');
+        }else{
+            this.onGround= true;
+            //console.log('ground');
+        }
+
+        if (this.onGround){
+            if (!(this.avatar.anims.currentAnim.key == 'avatar_run')){
+                this.avatar.play('avatar_run');
+            }
+        }else{
+            if (!(this.avatar.anims.currentAnim.key == 'avatar_jump')){
+                this.avatar.play('avatar_jump');
+            }
+        }
+        
     }
 
     startJump(){
@@ -63,15 +85,17 @@ class Play extends Phaser.Scene {
     endJump(){
         console.log("endJump");
         this.timer.remove();
-        this.avatar.setVelocityY(-this.power * 150 );
-        console.log("velocity: " + -this.power * 150);
+        if (this.onGround){
+            this.avatar.setVelocityY(-this.power * 150 );
+        }
+        //console.log("velocity: " + -this.power * 150);
         this.power= 4;
     }
 
     tick(){
         if (this.power < 12){
             this.power+= .8;
-            console.log("power: " + this.power);
+            //console.log("power: " + this.power);
         }
     }
 }

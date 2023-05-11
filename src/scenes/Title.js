@@ -5,13 +5,13 @@ class Title extends Phaser.Scene {
 
     create() {
         // add title screen text
-        let title01 = this.add.bitmapText(centerX, centerY, 'shortStack', 'Endless Runner', 64).setOrigin(0.5).setTint(0xff0000);
-        let title02 = this.add.bitmapText(centerX, centerY, 'shortStack', 'Endless Runner', 64).setOrigin(0.5).setTint(0xff00ff).setBlendMode('SCREEN');
-        let title03 = this.add.bitmapText(centerX, centerY, 'shortStack', 'Endless Runner', 64).setOrigin(0.5).setTint(0xffff00).setBlendMode('ADD');
+        let title01 = this.add.bitmapText(centerX, centerY, 'shortStack', 'Doodle Runner', 64).setOrigin(0.5).setTint(0xffffff);
+        let title02 = this.add.bitmapText(centerX, centerY, 'shortStack', 'Doodle Runner', 64).setOrigin(0.5).setTint(0xff00ff).setBlendMode('SCREEN');
+        let title03 = this.add.bitmapText(centerX, centerY, 'shortStack', 'Doodle Runner', 64).setOrigin(0.5).setTint(0xffff00).setBlendMode('ADD');
        
-        this.add.bitmapText(centerX, centerY + textSpacer, 'shortStack', '[Controls go here]', 24).setOrigin(0.5);
-        this.add.bitmapText(centerX, centerY + textSpacer*3, 'shortStack', 'Press UP ARROW to Start', 36).setOrigin(0.5);
-        this.add.bitmapText(centerX, h - textSpacer, 'shortStack', 'Tony Guizar', 16).setOrigin(0.5);
+        this.add.bitmapText(centerX, centerY + textSpacer, 'shortStack', 'Quick press or long press [SPACE] key to jump.', 24).setOrigin(0.5);
+        this.add.bitmapText(centerX, centerY + textSpacer*3, 'shortStack', 'Press [SHIFT] key to Start', 36).setOrigin(0.5);
+        this.add.bitmapText(centerX, h - textSpacer, 'shortStack', 'by Tony Guizar', 16).setOrigin(0.5);
 
         // title text tween
         this.tweens.add({
@@ -42,22 +42,8 @@ class Title extends Phaser.Scene {
     }
 
     update() {
-        // check for UP input
-        if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
-            let textureManager = this.textures;
-            // take snapshot of the entire game viewport
-            // https://newdocs.phaser.io/docs/3.55.2/Phaser.Renderer.WebGL.WebGLRenderer#snapshot
-            // .snapshot(callback, type, encoderOptions)
-            // the image is automatically passed to the callback
-            this.game.renderer.snapshot((snapshotImage) => {
-                // make sure an existing texture w/ that key doesn't already exist
-                if(textureManager.exists('titlesnapshot')) {
-                    textureManager.remove('titlesnapshot');
-                }
-                // take the snapshot img returned from callback and add to texture manager
-                textureManager.addImage('titlesnapshot', snapshotImage);
-            });
-            
+        // check for SHIFT input
+        if (Phaser.Input.Keyboard.JustDown(cursors.shift)) {
             // start next scene
             this.scene.start('playScene');
         }
