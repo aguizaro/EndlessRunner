@@ -18,7 +18,9 @@ class Load extends Phaser.Scene {
 
         // load graphics assets
         this.load.path = "./assets/";
-        this.load.atlas("ninja","img/ninja.png","img/ninja.json");
+        this.load.atlas("avatar","img/avatar.png","img/avatar.json");
+        this.load.image('background', 'img/background.png');
+        this.load.image("platform", "img/platform.png");
         // load font
         this.load.bitmapFont('shortStack', 'font/shortStack.png', 'font/shortStack.xml');
         
