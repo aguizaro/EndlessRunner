@@ -1,23 +1,28 @@
 class spikeBall extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, velocity) {
         // call Phaser Physics Sprite constructor
-        super(scene, game.config.width - 80, Phaser.Math.Between(game.config.height - 150 , game.config.height/3), 'spikeBall'); 
+        super(scene, game.config.width - 30, Phaser.Math.Between(game.config.height - 150 , game.config.height/3), 'spikeBall'); 
         
         this.parentScene = scene;               // maintain scene context
+        this.behindAvatar= false;               //true if the spike ball is behind the avatar
 
         // set up physics sprite
         this.parentScene.add.existing(this);    // add to existing scene, displayList, updateList
         this.parentScene.physics.add.existing(this);    // add to physics system
         this.setVelocityX(velocity);            // make it go!
-        this.displayHeight= 80;
-        this.displayWidth= 80;
+        let randomsize= Phaser.Math.Between(30, 120);
+        this.displayHeight= randomsize;
+        this.displayWidth= randomsize;
         this.setGravity(0, 4000);
-        this.setBounce(Phaser.Math.Between(0.4, 1.11));                  
-        this.play('spinBall');
+        this.setBounce(Phaser.Math.Between(0.8, 1.11));                  
+        this.play('spin_ball');
         this.newspikeBall = true;     
         
         //set collider
-        this.parentScene.physics.add.collider(this, this.parentScene.ground);// custom property to control spikeBall spawning
+        this.parentScene.physics.add.collider(this, this.parentScene.ground);
+        this.parentScene.physics.add.collider(this, this.parentScene.avatar,this.collision, undefined, this);
+
+       
     }
 
     update() {
@@ -28,9 +33,20 @@ class spikeBall extends Phaser.Physics.Arcade.Sprite {
             this.newspikeBall = false;
         }
 
-        // destroy paddle if it reaches the left edge of the screen
-        if(this.x < -this.width) {
+        //add a point to score, every time the avatar jumps over a spike ball
+        if ((!this.behindAvatar) && (this.x < 170)){
+            this.parentScene.points++;
+            this.behindAvatar= true;
+        }
+        // destroy spikeBall if it reaches the left edge of the screen
+        if(this.x < 0) {
             this.destroy();
         }
+    }
+
+    collision(){
+        //update avatar and destroy spike ball
+        this.parentScene.avatarCollision();
+        this.destroy();
     }
 }
