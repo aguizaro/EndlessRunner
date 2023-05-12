@@ -4,6 +4,15 @@ class Play extends Phaser.Scene {
     }
 
     create(){
+        // set up audio, play bgm
+        this.bgm = this.sound.add('groove', { 
+            mute: false,
+            volume: 1,
+            rate: 1,
+            loop: true 
+        });
+        this.bgm.play();
+
         //stops gameOverScene
         this.scene.stop('gameOverScene');
         this.points= 0; //keep track of score
@@ -119,10 +128,9 @@ class Play extends Phaser.Scene {
             this.spikeBallGroup.destroy(true);
             this.jumpStart.removeAllListeners();
             this.jumpEnd.removeAllListeners();
-            console.log('________GAME OVER ___________');
 
             //Bring up Game Over scene
-            this.scene.launch('gameOverScene');  
+            this.scene.launch('gameOverScene', this.bgm);  
         }
         
         
@@ -159,6 +167,7 @@ class Play extends Phaser.Scene {
     avatarCollision(){
         this.lifePoints-=1;
         this.cameras.main.shake();
+        this.sound.play('thud');
         
     }
 }

@@ -22,9 +22,11 @@ class Load extends Phaser.Scene {
         this.load.atlas("spikeBall","img/spike_ball.png","img/spike_ball.json");
         this.load.image('background', 'img/background.png');
         this.load.image("platform", "img/platform.png");
-        // load font
-        this.load.bitmapFont('shortStack', 'font/shortStack.png', 'font/shortStack.xml');
-        
+        // load sound
+        this.load.audio('groove', 'audio/groove.mp3');
+        this.load.audio('pickup', 'audio/pickup.wav');
+        this.load.audio('pickup2', 'audio/pickup2.wav'); 
+        this.load.audio('thud', 'audio/thud.mp3');       
     }
 
     create() {

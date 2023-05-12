@@ -27,7 +27,7 @@ class spikeBall extends Phaser.Physics.Arcade.Sprite {
 
     update() {
         // add new spikeBall when existing spikeBall hits center X
-        if(this.newspikeBall && this.x < centerX) {
+        if(this.newspikeBall && this.x < centerX - 100 ) {
             // (recursively) call parent scene method from this context
             this.parentScene.addspikeBall(this.parent, this.velocity);
             this.newspikeBall = false;
@@ -36,7 +36,14 @@ class spikeBall extends Phaser.Physics.Arcade.Sprite {
         //add a point to score, every time the avatar jumps over a spike ball
         if ((!this.behindAvatar) && (this.x < 170)){
             this.parentScene.points++;
-            this.behindAvatar= true;
+            //play different sound if the point is a multipme of 5
+            if(this.parentScene.points % 5 == 0){
+                this.parentScene.sound.play('pickup2');
+                this.parentScene.sound.play('pickup')
+            }else{
+                this.parentScene.sound.play('pickup');
+            }
+            this.behindAvatar= true; //reset boolean
         }
         // destroy spikeBall if it reaches the left edge of the screen
         if(this.x < 0) {

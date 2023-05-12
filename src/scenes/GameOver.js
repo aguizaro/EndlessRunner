@@ -21,13 +21,17 @@ class GameOver extends Phaser.Scene {
         // check for SHIFT input
         if (Phaser.Input.Keyboard.JustDown(cursors.shift)) {
             // start next scene
+            this.bgm.stop();
             this.scene.start('playScene');
-            console.log('in GameOVER');
         }else if(Phaser.Input.Keyboard.JustDown(cursors.space)){
+            this.bgm.stop();
             this.scene.stop('playScene');
-            
             this.scene.start('titleScene');
         }
+    }
+
+    init(data){
+        this.bgm= data;
     }
 
 }
