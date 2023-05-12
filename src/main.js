@@ -1,6 +1,6 @@
 // Antonio Guizar Orozco
 // Spike Ball Runner v1.1
-// Hours Spent: 13
+// Hours Spent: 16
 // Creative Tilt: I implemented the use of phaser's light ability to simulate a sun. This took a bit of trial and error to get right. I also made it
 //                so that, when the player gets to low health, the ambiance chnages and the score display turns red. I also made my own artwork 
 //                and animations. I am not an artist by any means, so getting something like this to work is a great accomplishment and I am pround 
