@@ -26,7 +26,8 @@ class Load extends Phaser.Scene {
         this.load.audio('groove', 'audio/groove.mp3');
         this.load.audio('pickup', 'audio/pickup.wav');
         this.load.audio('pickup2', 'audio/pickup2.wav'); 
-        this.load.audio('thud', 'audio/thud.mp3');       
+        this.load.audio('thud', 'audio/thud.mp3');
+        this.load.audio('menuSelect', 'audio/menuSelect.wav');       
     }
 
     create() {

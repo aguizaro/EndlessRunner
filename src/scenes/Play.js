@@ -15,11 +15,11 @@ class Play extends Phaser.Scene {
 
         //stops gameOverScene
         this.scene.stop('gameOverScene');
-        this.points= 0; //keep track of score
+        this.points= 0;                     //keep track of score
+        this.power= 0;                      //Power of jump
+        this.lifePoints= 3;                 //number of life points
+        this.gameOver= false;               //game state
 
-        this.power= 0;
-        this.lifePoints= 3;
-        this.gameOver= false;
         //create player avatar run animation
         this.anims.create({
              key: 'avatar_run',
@@ -46,21 +46,29 @@ class Play extends Phaser.Scene {
                end: 3,
            }), repeat: -1 });
         
+        
         //background as a tile sprite
-        this.background= this.add.tileSprite(w- 200, h, w*5, h*5, 'background').setOrigin(0.5);
+        this.background= this.add.tileSprite(w- 200, h, w*5, h*5 - 80, 'background').setOrigin(0.5);
+        //Enable lights and set a  ambient color
+        this.lights.enable()
+        this.lights.setAmbientColor(0xFFFFFF);
+        this.background.setPipeline('Light2D'); //make light take effect on background only
+        //add spotlight/sun 
+        this.lights.addLight(880, 60, 600).setIntensity(1.5);
+
         //screen UI
         this.add.rectangle(0,0,game.config.width*2,120, 0xb380ff).setOrigin(0.5);
         this.add.rectangle(game.config.width*2 - 200, 0, game.config.width*2,120, 0xb38fff ).setOrigin(0.5);
-        this.lifePointsDisplay= this.add.text(game.config.width - 160, 30, this.lifePoints, { fontFamily: 'impact', fontSize: 40, color: 'Navy' }).setOrigin(0.5);
-        this.pointsDisplay= this.add.text(game.config.width - 240, 30, this.points, { fontFamily: 'impact', fontSize: 40, color: 'Navy' }).setOrigin(0.5);
+        this.lifePointsDisplay= this.add.text(game.config.width - 160, 30, this.lifePoints, { fontFamily: 'impact', fontSize: 40, color: 'Navy' , strokeThickness: 3}).setOrigin(0.5);
+        this.pointsDisplay= this.add.text(game.config.width - 240, 30, this.points, { fontFamily: 'impact', fontSize: 40, color: 'Navy' , strokeThickness: 3}).setOrigin(0.5);
 
         //build player sprite
         this.avatar= this.physics.add.sprite(200,500, "avatar").play('avatar_run');
         this.avatar.displayHeight= 100;
         this.avatar.displayWidth= 50;
         this.avatar.setGravity(0, 4000);
-        //this.avatar.setCollideWorldBounds();
         this.onGround= false;
+
         //build platform sprite
         this.ground= this.physics.add.sprite(w*.15, h*.99, "platform", );
         this.ground.displayWidth= w * 1.75;
@@ -80,6 +88,7 @@ class Play extends Phaser.Scene {
 
         //set collider
         this.physics.add.collider(this.avatar, this.ground);
+
         //call jump when space key is pressed
         this.jumpStart= cursors.space.on( "down", this.startJump, this);
         this.jumpEnd= cursors.space.on( "up", this.endJump, this);
@@ -96,8 +105,16 @@ class Play extends Phaser.Scene {
         //set avatar velocity to 0 every frame, so it is not knocked off the platform by world physics
         this.avatar.setVelocityX(0);
         //update health points display and points display
-        this.lifePointsDisplay.setText(this.lifePoints);
+        if (this.lifePoints > 1){
+            this.lifePointsDisplay.setText(this.lifePoints);
+        }else{
+            this.lifePointsDisplay.setText(this.lifePoints)
+            this.lifePointsDisplay.style.color= 'red';
+            this.lights.setAmbientColor(0x0b380ff);
+            this.bgm.setRate(1.05);
+        }
         this.pointsDisplay.setText(this.points);
+
         //check if player lost all lives
         if (this.lifePoints <= 0){
             this.gameOver= true;
@@ -138,7 +155,7 @@ class Play extends Phaser.Scene {
     //source: https://www.youtube.com/watch?v=fQiUlWlQjYU&t=14s
     //start the jump, start timer that calls tick
     startJump(){
-        console.log("startJump");
+        //console.log("startJump");
         this.timer= this.time.addEvent({
             delay: 7, 
             callback: this.tick,
@@ -148,7 +165,7 @@ class Play extends Phaser.Scene {
     }
     //removes timer and performs jump
     endJump(){
-        console.log("endJump");
+        //console.log("endJump");
         this.timer.remove();
         if (this.onGround){
             this.avatar.setVelocityY(-this.power * 150 );
